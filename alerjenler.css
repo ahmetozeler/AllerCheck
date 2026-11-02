@@ -188,5 +188,22 @@
     .selection-actions button {
         width: 100%;
     }
-
+    
 }
+
+.scan-link {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 15px;
+    padding: 14px;
+    text-align: center;
+    text-decoration: none;
+    color: #101419;
+    background: var(--green);
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+
+
