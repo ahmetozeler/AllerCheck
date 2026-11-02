@@ -20,7 +20,8 @@
     line-height: 1.7;
 }
 
-.camera-card {
+.camera-card,
+.result-card {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 16px;
@@ -128,6 +129,40 @@
     min-height: 18px;
 }
 
+.result-card {
+    margin-top: 25px;
+}
+
+.result-card h2 {
+    font-size: 21px;
+    margin-bottom: 10px;
+}
+
+.result-card p {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 18px;
+}
+
+.ocr-progress {
+    color: var(--green);
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+#recognizedText {
+    background: #101419;
+    color: var(--text);
+    padding: 18px;
+    border-radius: 10px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    min-height: 100px;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
 .scanner-warning {
     display: flex;
     align-items: flex-start;
@@ -160,7 +195,8 @@
         font-size: 27px;
     }
 
-    .camera-card {
+    .camera-card,
+    .result-card {
         padding: 15px;
     }
 
