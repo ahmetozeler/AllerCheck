@@ -14,6 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 </head>
 
 <body>
@@ -84,9 +85,28 @@
                     Yeniden Çek
                 </button>
 
+                <button id="readText" class="photo-button" type="button" disabled>
+                    <i data-lucide="file-text"></i>
+                    Fotoğrafı Oku
+                </button>
+
             </div>
 
             <p id="cameraStatus" class="camera-status"></p>
+
+        </section>
+
+        <section class="result-card">
+
+            <h2>Okunan İçerik Listesi</h2>
+
+            <p>
+                Fotoğraftan tanınan metin burada görünecek.
+            </p>
+
+            <div id="ocrProgress" class="ocr-progress"></div>
+
+            <pre id="recognizedText">Henüz bir fotoğraf okunmadı.</pre>
 
         </section>
 
