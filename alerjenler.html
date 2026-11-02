@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AllerCheck | Alerjenlerim</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="alerjenler.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="container header-content">
+
+            <a href="index.html" class="logo">
+                AllerCheck
+            </a>
+
+            <a href="index.html" class="back-link">
+                Ana Sayfaya Dön
+            </a>
+
+        </div>
+    </header>
+
+    <main class="allergen-container">
+
+        <section class="allergen-heading">
+            <span class="section-label">KİŞİSEL PROFİLİN</span>
+
+            <h1>Alerjenlerini Seç</h1>
+
+            <p>
+                Hassasiyet gösterdiğin içerikleri seç.
+                AllerCheck ürün taramalarında bu içerikleri kontrol edecek.
+            </p>
+        </section>
+
+        <section class="allergen-card">
+
+            <div class="selection-header">
+                <div>
+                    <h2>Alerjen Listesi</h2>
+                    <p>Birden fazla seçim yapabilirsin.</p>
+                </div>
+
+                <span class="selected-count">
+                    <span id="selectedCount">0</span> seçildi
+                </span>
+            </div>
+
+            <div id="allergenList" class="allergen-list">
+                <!-- Alerjenler JavaScript ile buraya eklenecek. -->
+            </div>
+
+            <div class="selection-actions">
+
+    <button id="clearButton" class="clear-button" type="button">
+        Seçimleri Temizle
+    </button>
+
+    <button id="saveButton" class="save-button" type="button">
+        Seçimlerimi Kaydet
+    </button>
+
+</div>
+
+<a href="tarama.html" class="scan-link">
+    Ürün Taramaya Geç
+</a>
+
+<p id="statusMessage" class="status-message"></p>
+
+                
+
+            </div>
+
+            <p id="statusMessage" class="status-message"></p>
+
+        </section>
+
+        <div class="allergen-warning">
+            <i data-lucide="alert-triangle"></i>
+
+            <p>
+                AllerCheck bir bilgilendirme aracıdır.
+                Ürün etiketlerini her zaman kontrol et.
+                Alerji durumunda yalnızca bu uygulamanın sonucuna güvenme.
+            </p>
+        </div>
+
+    </main>
+
+    <script src="alerjenler.js"></script>
+
+</body>
+</html>
