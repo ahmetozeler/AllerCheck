@@ -1,6 +1,7 @@
 
 const camera = document.getElementById("camera");
 const canvas = document.getElementById("canvas");
+const cropImage = document.getElementById("cropImage");
 
 const startCameraButton = document.getElementById("startCamera");
 const takePhotoButton = document.getElementById("takePhoto");
@@ -12,8 +13,10 @@ const cameraStatus = document.getElementById("cameraStatus");
 
 const recognizedText = document.getElementById("recognizedText");
 const ocrProgress = document.getElementById("ocrProgress");
+const cropInfo = document.getElementById("cropInfo");
 
 let cameraStream = null;
+let cropper = null;
 
 
 // Kamerayı başlatır.
@@ -22,6 +25,16 @@ async function startCamera() {
     try {
 
         stopCamera();
+
+        if (cropper) {
+            cropper.destroy();
+            cropper = null;
+        }
+
+        cropImage.style.display = "none";
+        camera.style.display = "none";
+
+        cropInfo.hidden = true;
 
         cameraStatus.textContent = "Kamera açılıyor...";
 
@@ -42,7 +55,6 @@ async function startCamera() {
         await camera.play();
 
         camera.style.display = "block";
-        canvas.style.display = "none";
 
         cameraPlaceholder.style.display = "none";
 
@@ -55,7 +67,7 @@ async function startCamera() {
         ocrProgress.textContent = "";
 
         cameraStatus.textContent =
-            "Kamera hazır. İçindekiler listesini netleştir ve fotoğraf çek.";
+            "Kamera hazır. Fotoğraf çekebilirsin.";
 
     } catch (error) {
 
@@ -69,7 +81,7 @@ async function startCamera() {
 }
 
 
-// Fotoğraf çeker.
+// Fotoğraf çeker ve kırpma aracını açar.
 function takePhoto() {
 
     if (!cameraStream) {
@@ -89,18 +101,50 @@ function takePhoto() {
         canvas.height
     );
 
-    camera.style.display = "none";
-    canvas.style.display = "block";
-
     stopCamera();
 
+    camera.style.display = "none";
+
+    cropImage.onload = function() {
+
+        cropImage.style.display = "block";
+
+        if (cropper) {
+            cropper.destroy();
+        }
+
+        cropper = new Cropper(cropImage, {
+
+            viewMode: 1,
+            dragMode: "crop",
+            autoCropArea: 0.8,
+            responsive: true,
+            background: false,
+            movable: true,
+            zoomable: true,
+            scalable: false,
+            rotatable: false,
+            guides: true,
+            center: true,
+            highlight: true,
+            cropBoxMovable: true,
+            cropBoxResizable: true
+
+        });
+
+        readTextButton.disabled = false;
+
+        cameraStatus.textContent =
+            "İçindekiler bölümünü seç ve Seçili Alanı Oku butonuna bas.";
+
+        cropInfo.hidden = false;
+
+    };
+
+    cropImage.src = canvas.toDataURL("image/jpeg", 0.95);
+
     takePhotoButton.disabled = true;
-    readTextButton.disabled = false;
-
     retakePhotoButton.hidden = false;
-
-    cameraStatus.textContent =
-        "Fotoğraf çekildi! Şimdi fotoğrafı okuyabilirsin.";
 
 }
 
@@ -143,7 +187,6 @@ function improveImage(sourceCanvas) {
         willReadFrequently: true
     });
 
-    // Görüntüyü büyütür.
     context.drawImage(
         sourceCanvas,
         0,
@@ -163,7 +206,7 @@ function improveImage(sourceCanvas) {
 
     const histogram = new Array(256).fill(0);
 
-    // Görüntüyü gri tonlamaya çevirir.
+    // Gri tonlama.
     for (let i = 0; i < pixels.length; i += 4) {
 
         const gray = Math.round(
@@ -180,7 +223,7 @@ function improveImage(sourceCanvas) {
 
     }
 
-    // Otsu yöntemiyle eşik değerini hesaplar.
+    // Otsu eşik değeri.
     const totalPixels = processedCanvas.width * processedCanvas.height;
 
     let sum = 0;
@@ -211,6 +254,7 @@ function improveImage(sourceCanvas) {
         sumBackground += i * histogram[i];
 
         const meanBackground = sumBackground / weightBackground;
+
         const meanForeground =
             (sum - sumBackground) / weightForeground;
 
@@ -228,7 +272,7 @@ function improveImage(sourceCanvas) {
 
     }
 
-    // Siyah-beyaz görüntü oluşturur.
+    // Siyah-beyaz görüntü.
     for (let i = 0; i < pixels.length; i += 4) {
 
         const value = pixels[i] > threshold ? 255 : 0;
@@ -246,16 +290,22 @@ function improveImage(sourceCanvas) {
 }
 
 
-// Fotoğraftaki yazıları okur.
+// Kırpılmış fotoğrafı okur.
 async function recognizeText() {
 
-    if (!canvas.width || !canvas.height) {
+    if (!cropper) {
+
+        cameraStatus.textContent =
+            "Önce fotoğraf çekmelisin.";
+
         return;
+
     }
 
     if (typeof Tesseract === "undefined") {
 
-        ocrProgress.textContent = "OCR kütüphanesi yüklenemedi.";
+        ocrProgress.textContent =
+            "OCR kütüphanesi yüklenemedi.";
 
         return;
 
@@ -264,18 +314,32 @@ async function recognizeText() {
     readTextButton.disabled = true;
 
     recognizedText.textContent = "Görüntü hazırlanıyor...";
-    ocrProgress.textContent = "Fotoğraf iyileştiriliyor...";
+    ocrProgress.textContent = "Seçilen alan işleniyor...";
 
     let worker = null;
 
     try {
 
-        // Fotoğrafı OCR için iyileştirir.
-        const processedImage = improveImage(canvas);
+        // Yalnızca seçilen alanı alır.
+        const croppedCanvas = cropper.getCroppedCanvas({
 
-        ocrProgress.textContent = "Türkçe OCR motoru hazırlanıyor...";
+            maxWidth: 2000,
+            maxHeight: 2000,
+            imageSmoothingEnabled: true,
+            imageSmoothingQuality: "high"
 
-        // Türkçe OCR motorunu başlatır.
+        });
+
+        if (!croppedCanvas) {
+            throw new Error("Fotoğraf kırpılamadı.");
+        }
+
+        // Kırpılan alanı iyileştirir.
+        const processedImage = improveImage(croppedCanvas);
+
+        ocrProgress.textContent =
+            "Türkçe OCR motoru hazırlanıyor...";
+
         worker = await Tesseract.createWorker(
             "tur",
             1,
@@ -285,7 +349,7 @@ async function recognizeText() {
                     if (message.status === "loading language traineddata") {
 
                         ocrProgress.textContent =
-                            "Türkçe dil dosyası indiriliyor...";
+                            "Türkçe dil dosyası yükleniyor...";
 
                     }
 
@@ -304,13 +368,13 @@ async function recognizeText() {
             }
         );
 
-        // Metin blokları için sayfa düzeni ayarı.
         await worker.setParameters({
+
             tessedit_pageseg_mode: "6",
             preserve_interword_spaces: "1"
+
         });
 
-        // İyileştirilmiş fotoğrafı okur.
         const result = await worker.recognize(processedImage);
 
         const text = result.data.text.trim();
@@ -319,12 +383,13 @@ async function recognizeText() {
 
             recognizedText.textContent = text;
 
-            ocrProgress.textContent = "Okuma tamamlandı.";
+            ocrProgress.textContent =
+                "Okuma tamamlandı. Metni kontrol etmeyi unutma.";
 
         } else {
 
             recognizedText.textContent =
-                "Fotoğraftan metin okunamadı. Daha net bir fotoğraf çekmeyi dene.";
+                "Seçilen alandan metin okunamadı. Daha net bir fotoğraf deneyebilirsin.";
 
             ocrProgress.textContent = "Okuma başarısız.";
 
