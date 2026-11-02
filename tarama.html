@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AllerCheck | Ürün Tara</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tarama.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="container header-content">
+
+            <a href="index.html" class="logo">AllerCheck</a>
+
+            <a href="alerjenler.html" class="back-link">
+                Geri Dön
+            </a>
+
+        </div>
+    </header>
+
+    <main class="scanner-container">
+
+        <section class="scanner-heading">
+            <span class="section-label">ÜRÜN KONTROLÜ</span>
+
+            <h1>Ürünün İçindekiler Kısmını Tara</h1>
+
+            <p>
+                Ürünün arkasındaki içerik listesini kameraya göster
+                ve fotoğrafını çek.
+            </p>
+        </section>
+
+        <section class="camera-card">
+
+            <div class="camera-screen">
+
+                <video id="camera" autoplay playsinline></video>
+
+                <canvas id="canvas"></canvas>
+
+                <div id="cameraPlaceholder" class="camera-placeholder">
+
+                    <i data-lucide="camera"></i>
+
+                    <h3>Kamera henüz açılmadı</h3>
+
+                    <p>Kamerayı başlatmak için aşağıdaki butona bas.</p>
+
+                </div>
+
+            </div>
+
+            <div class="camera-actions">
+
+                <button id="startCamera" class="camera-button" type="button">
+                    <i data-lucide="camera"></i>
+                    Kamerayı Aç
+                </button>
+
+                <button id="takePhoto" class="photo-button" type="button" disabled>
+                    <i data-lucide="scan"></i>
+                    Fotoğraf Çek
+                </button>
+
+                <button id="retakePhoto" class="retake-button" type="button" hidden>
+                    <i data-lucide="refresh-cw"></i>
+                    Yeniden Çek
+                </button>
+
+            </div>
+
+            <p id="cameraStatus" class="camera-status"></p>
+
+        </section>
+
+        <div class="scanner-warning">
+
+            <i data-lucide="info"></i>
+
+            <p>
+                Daha iyi sonuç almak için içerik listesinin tamamını
+                net ve aydınlık şekilde kadraja sığdır.
+            </p>
+
+        </div>
+
+    </main>
+
+    <script src="tarama.js"></script>
+
+    <script>
+        lucide.createIcons();
+    </script>
+
+</body>
+</html>
