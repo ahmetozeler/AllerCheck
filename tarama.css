@@ -35,6 +35,9 @@
     background: #080b0e;
     border-radius: 12px;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #camera {
@@ -45,10 +48,16 @@
 }
 
 #canvas {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
     display: none;
+}
+
+#cropImage {
+    display: none;
+    max-width: 100%;
+}
+
+.cropper-container {
+    max-width: 100%;
 }
 
 .camera-placeholder {
@@ -77,6 +86,14 @@
 .camera-placeholder p {
     color: var(--muted);
     font-size: 13px;
+}
+
+.crop-info {
+    color: var(--green);
+    font-size: 13px;
+    line-height: 1.6;
+    margin-top: 15px;
+    text-align: center;
 }
 
 .camera-actions {
