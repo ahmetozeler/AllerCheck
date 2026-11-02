@@ -21,13 +21,20 @@ async function startCamera() {
 
     try {
 
+        stopCamera();
+
         cameraStatus.textContent = "Kamera açılıyor...";
 
         cameraStream = await navigator.mediaDevices.getUserMedia({
+
             video: {
-                facingMode: "environment"
+                facingMode: "environment",
+                width: { ideal: 1920 },
+                height: { ideal: 1080 }
             },
+
             audio: false
+
         });
 
         camera.srcObject = cameraStream;
@@ -47,7 +54,8 @@ async function startCamera() {
         recognizedText.textContent = "Henüz bir fotoğraf okunmadı.";
         ocrProgress.textContent = "";
 
-        cameraStatus.textContent = "Kamera hazır. Fotoğraf çekebilirsin.";
+        cameraStatus.textContent =
+            "Kamera hazır. İçindekiler listesini netleştir ve fotoğraf çek.";
 
     } catch (error) {
 
@@ -121,6 +129,123 @@ function retakePhoto() {
 }
 
 
+// Görüntüyü OCR için iyileştirir.
+function improveImage(sourceCanvas) {
+
+    const processedCanvas = document.createElement("canvas");
+
+    const scale = 2;
+
+    processedCanvas.width = sourceCanvas.width * scale;
+    processedCanvas.height = sourceCanvas.height * scale;
+
+    const context = processedCanvas.getContext("2d", {
+        willReadFrequently: true
+    });
+
+    // Görüntüyü büyütür.
+    context.drawImage(
+        sourceCanvas,
+        0,
+        0,
+        processedCanvas.width,
+        processedCanvas.height
+    );
+
+    const imageData = context.getImageData(
+        0,
+        0,
+        processedCanvas.width,
+        processedCanvas.height
+    );
+
+    const pixels = imageData.data;
+
+    const histogram = new Array(256).fill(0);
+
+    // Görüntüyü gri tonlamaya çevirir.
+    for (let i = 0; i < pixels.length; i += 4) {
+
+        const gray = Math.round(
+            0.299 * pixels[i] +
+            0.587 * pixels[i + 1] +
+            0.114 * pixels[i + 2]
+        );
+
+        pixels[i] = gray;
+        pixels[i + 1] = gray;
+        pixels[i + 2] = gray;
+
+        histogram[gray]++;
+
+    }
+
+    // Otsu yöntemiyle eşik değerini hesaplar.
+    const totalPixels = processedCanvas.width * processedCanvas.height;
+
+    let sum = 0;
+
+    for (let i = 0; i < 256; i++) {
+        sum += i * histogram[i];
+    }
+
+    let sumBackground = 0;
+    let weightBackground = 0;
+    let maxVariance = 0;
+    let threshold = 140;
+
+    for (let i = 0; i < 256; i++) {
+
+        weightBackground += histogram[i];
+
+        if (weightBackground === 0) {
+            continue;
+        }
+
+        const weightForeground = totalPixels - weightBackground;
+
+        if (weightForeground === 0) {
+            break;
+        }
+
+        sumBackground += i * histogram[i];
+
+        const meanBackground = sumBackground / weightBackground;
+        const meanForeground =
+            (sum - sumBackground) / weightForeground;
+
+        const variance =
+            weightBackground *
+            weightForeground *
+            Math.pow(meanBackground - meanForeground, 2);
+
+        if (variance > maxVariance) {
+
+            maxVariance = variance;
+            threshold = i;
+
+        }
+
+    }
+
+    // Siyah-beyaz görüntü oluşturur.
+    for (let i = 0; i < pixels.length; i += 4) {
+
+        const value = pixels[i] > threshold ? 255 : 0;
+
+        pixels[i] = value;
+        pixels[i + 1] = value;
+        pixels[i + 2] = value;
+
+    }
+
+    context.putImageData(imageData, 0, 0);
+
+    return processedCanvas;
+
+}
+
+
 // Fotoğraftaki yazıları okur.
 async function recognizeText() {
 
@@ -138,16 +263,31 @@ async function recognizeText() {
 
     readTextButton.disabled = true;
 
-    recognizedText.textContent = "Fotoğraf okunuyor...";
-    ocrProgress.textContent = "OCR hazırlanıyor...";
+    recognizedText.textContent = "Görüntü hazırlanıyor...";
+    ocrProgress.textContent = "Fotoğraf iyileştiriliyor...";
+
+    let worker = null;
 
     try {
 
-        const result = await Tesseract.recognize(
-            canvas,
+        // Fotoğrafı OCR için iyileştirir.
+        const processedImage = improveImage(canvas);
+
+        ocrProgress.textContent = "Türkçe OCR motoru hazırlanıyor...";
+
+        // Türkçe OCR motorunu başlatır.
+        worker = await Tesseract.createWorker(
             "tur",
+            1,
             {
                 logger: function(message) {
+
+                    if (message.status === "loading language traineddata") {
+
+                        ocrProgress.textContent =
+                            "Türkçe dil dosyası indiriliyor...";
+
+                    }
 
                     if (message.status === "recognizing text") {
 
@@ -163,6 +303,15 @@ async function recognizeText() {
                 }
             }
         );
+
+        // Metin blokları için sayfa düzeni ayarı.
+        await worker.setParameters({
+            tessedit_pageseg_mode: "6",
+            preserve_interword_spaces: "1"
+        });
+
+        // İyileştirilmiş fotoğrafı okur.
+        const result = await worker.recognize(processedImage);
 
         const text = result.data.text.trim();
 
@@ -188,11 +337,18 @@ async function recognizeText() {
         recognizedText.textContent =
             "Fotoğraf okunurken bir hata oluştu.";
 
-        ocrProgress.textContent = "Tekrar deneyebilirsin.";
+        ocrProgress.textContent =
+            "Bir hata oluştu. Tekrar deneyebilirsin.";
+
+    } finally {
+
+        if (worker) {
+            await worker.terminate();
+        }
+
+        readTextButton.disabled = false;
 
     }
-
-    readTextButton.disabled = false;
 
 }
 
