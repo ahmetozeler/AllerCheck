@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AllerCheck | Alerjen Kontrol Sistemi</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <header class="header">
+        <div class="container navbar">
+
+            <a href="index.html" class="logo">
+                <i data-lucide="shield-check"></i>
+                Aller<span>Check</span>
+            </a>
+
+            <nav>
+                <a href="#anasayfa">Ana Sayfa</a>
+                <a href="#nasil-calisir">Nasıl Çalışır?</a>
+                <a href="#hakkinda">Hakkında</a>
+            </nav>
+
+            <a href="alerjenler.html" class="nav-button">
+                Hemen Başla
+            </a>
+
+        </div>
+    </header>
+
+
+    <!-- ANA ALAN -->
+
+    <section class="hero" id="anasayfa">
+
+        <div class="container hero-content">
+
+            <div class="hero-text">
+
+                <div class="badge">
+                    <i data-lucide="heart-pulse"></i>
+                    Daha bilinçli tüketim
+                </div>
+
+                <h1>
+                    Ne yediğini bil,
+                    <span>güvende kal.</span>
+                </h1>
+
+                <p>
+                    Alerjin olan gıdaları kolayca kontrol et.
+                    Ürünlerin içeriklerini tara ve sana uygun
+                    seçimler yap.
+                </p>
+
+                <a href="alerjenler.html" class="primary-button">
+                    Alerjenlerimi Belirle
+                    <i data-lucide="arrow-right"></i>
+                </a>
+
+            </div>
+
+
+            <div class="scanner-card">
+
+                <div class="scanner-title">
+                    <div>
+                        <small>ALLERCHECK SCANNER</small>
+                        <h2>Ürününü kontrol et</h2>
+                    </div>
+
+                    <i data-lucide="scan-line"></i>
+                </div>
+
+                <div class="camera-area">
+
+                    <i data-lucide="camera"></i>
+
+                    <h3>Ürününü tara</h3>
+
+                    <p>Kamera özelliği yakında</p>
+
+                </div>
+
+                <div class="scanner-info">
+                    <i data-lucide="info"></i>
+                    <p>
+                        Ürünün arkasındaki içerik listesini
+                        kamerayla okutarak kontrol edebileceksin.
+                    </p>
+                </div>
+
+                <a href="alerjenler.html" class="scanner-button">
+                    Başlamak için tıkla
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- NASIL ÇALIŞIR -->
+
+    <section class="steps-section" id="nasil-calisir">
+
+        <div class="container">
+
+            <div class="section-title">
+                <small>NASIL ÇALIŞIR?</small>
+                <h2>Üç adımda <span>alerjen kontrolü.</span></h2>
+                <p>AllerCheck kullanmak oldukça kolay.</p>
+            </div>
+
+
+            <div class="steps-grid">
+
+                <div class="step-card">
+                    <i data-lucide="list-checks"></i>
+                    <h3>Alerjenlerini Seç</h3>
+                    <p>
+                        Alerjin olan gıdaları seçerek
+                        kişisel profilini oluştur.
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <i data-lucide="camera"></i>
+                    <h3>Ürünü Tara</h3>
+                    <p>
+                        Ürünün arkasındaki içerik listesini
+                        kamerayla okut.
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <i data-lucide="shield-check"></i>
+                    <h3>Sonucu Gör</h3>
+                    <p>
+                        İçerikte alerjen bulunup bulunmadığını
+                        kontrol et.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- HAKKINDA -->
+
+    <section class="about-section" id="hakkinda">
+
+        <div class="container about-card">
+
+            <i data-lucide="shield-plus"></i>
+
+            <h2>Sağlığın önceliğimiz.</h2>
+
+            <p>
+                AllerCheck, gıda ürünlerindeki alerjenleri
+                tespit etmeye yardımcı olmak amacıyla
+                geliştirilmektedir.
+            </p>
+
+            <p class="warning">
+                Sonuçlar kesin güvenlik garantisi değildir.
+                Ürün etiketlerini ve eser miktar uyarılarını
+                mutlaka kontrol et.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+
+        <div class="container">
+            <a href="index.html" class="logo">
+                Aller<span>Check</span>
+            </a>
+
+            <p>© <span id="year"></span> AllerCheck</p>
+        </div>
+
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>

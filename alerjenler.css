@@ -1,0 +1,192 @@
+
+.allergen-container {
+    width: 90%;
+    max-width: 900px;
+    margin: 70px auto;
+}
+
+.allergen-heading {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-label {
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.allergen-heading h1 {
+    font-size: 38px;
+    margin: 15px 0;
+}
+
+.allergen-heading p {
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+.allergen-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 30px;
+}
+
+.selection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.selection-header h2 {
+    font-size: 22px;
+    margin-bottom: 8px;
+}
+
+.selection-header p {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.selected-count {
+    color: var(--green);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.allergen-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.allergen-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: #202831;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.allergen-item:hover {
+    border-color: var(--green);
+}
+
+.allergen-item.selected {
+    border-color: var(--green);
+    background: rgba(37, 214, 154, 0.08);
+}
+
+.allergen-item input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--green);
+    cursor: pointer;
+}
+
+.allergen-item span {
+    color: var(--text);
+    font-size: 14px;
+}
+
+.selection-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.selection-actions button {
+    padding: 13px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.clear-button {
+    color: var(--text);
+    background: transparent;
+    border: 1px solid var(--border);
+}
+
+.clear-button:hover {
+    border-color: #ff5b5b;
+    color: #ff5b5b;
+}
+
+.save-button {
+    color: #101419;
+    background: var(--green);
+    border: none;
+}
+
+.save-button:hover {
+    opacity: 0.85;
+}
+
+.status-message {
+    margin-top: 15px;
+    font-size: 14px;
+    text-align: right;
+    color: var(--green);
+    min-height: 18px;
+}
+
+.allergen-warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 25px;
+    padding: 18px;
+    background: rgba(255, 190, 70, 0.08);
+    border: 1px solid rgba(255, 190, 70, 0.25);
+    border-radius: 10px;
+}
+
+.allergen-warning i {
+    color: #ffbe46;
+    min-width: 20px;
+}
+
+.allergen-warning p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+
+    .allergen-container {
+        margin: 40px auto;
+    }
+
+    .allergen-heading h1 {
+        font-size: 29px;
+    }
+
+    .allergen-card {
+        padding: 20px;
+    }
+
+    .allergen-list {
+        grid-template-columns: 1fr;
+    }
+
+    .selection-actions {
+        flex-direction: column;
+    }
+
+    .selection-actions button {
+        width: 100%;
+    }
+
+}
